@@ -24,7 +24,7 @@ $(window).on('load', function () {
       console.log("localhost:2056/api/"+$("#type").val()+"/"+$("#inputNomDeVille").val())
       $.get("http://localhost:2056/api/"+$("#type").val()+"/"+$("#inputNomDeVille").val(), function(response) {
         //http://localhost:2056/api/activites/Vertou
-        console.log(response)
+        console.log("test")
         $("#resultat").append(
           `
           <tr>
