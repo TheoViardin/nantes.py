@@ -18,8 +18,13 @@ $(window).on('load', function () {
   });
 
   $("#recherche").on("click", function() {
+    console.log($("#type").val())
+      console.log($("#inputNomDeVille").val())
     if ($("#type").val() != "" && $("#inputNomDeVille").val() != "") {
-      $.get("./api/"+$("#type").val()+"/"+$("#inputNomDeVille").val(), function(response) {
+      console.log("localhost:2056/api/"+$("#type").val()+"/"+$("#inputNomDeVille").val())
+      $.get("http://localhost:2056/api/"+$("#type").val()+"/"+$("#inputNomDeVille").val(), function(response) {
+        //http://localhost:2056/api/activites/Vertou
+        console.log(response)
         $("#resultat").append(
           `
           <tr>
@@ -29,7 +34,7 @@ $(window).on('load', function () {
           `
         )
         let i = 0
-        for (element of response) {
+        for (element of response[$("#type").val()]) {
           $("#resultat").append(
             `
             <tr>
@@ -41,6 +46,9 @@ $(window).on('load', function () {
           i++
         }
       })
+      .fail(function(response) {
+  console.log( response );
+})
     }
   })
-}
+})

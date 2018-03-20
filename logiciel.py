@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from bottle import route, run, template
+from bottle import route, run, template, get, app, hook
 from bottle import response
 from json import dumps
 import sqlite3
@@ -33,21 +33,36 @@ class Equipements(object):
         conn.commit()
         conn.close()
 
+_allow_origin = '*'
+_allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
+_allow_headers = 'Authorization, Origin, Accept, Content-Type, X-Requested-With'
+
+@hook('after_request')
+def enable_cors():
+    '''Add headers to enable CORS'''
+
+    response.headers['Access-Control-Allow-Origin'] = _allow_origin
+    response.headers['Access-Control-Allow-Methods'] = _allow_methods
+    response.headers['Access-Control-Allow-Headers'] = _allow_headers
+
+@get('/api/activites/<ville>')
+def index(ville):
+    activites = Equipements_activites()
+    liste = activites.getActiviteByVille(ville)
+    response.headers['Content-Type'] = 'application/json'
+    return { "activites" : liste}
+
+@get('/api/equipements/<ville>')
+def index(ville):
+    equipements = Equipements()
+    liste = equipements.getEquipementsByVille(ville)
+    print('test')
+    response.headers['Content-Type'] = 'application/json'
+    return { "equipements" : liste}
+
+
 
 if __name__ == '__main__':
-
-    @route('/api/activites/<ville>')
-    def index(ville):
-        activites = Equipements_activites()
-        liste = activites.getActiviteByVille(ville)
-        return { "activites" : liste}
-
-    @route('/api/equipements/<ville>')
-    def index(ville):
-        equipements = Equipements()
-        liste = equipements.getEquipementsByVille(ville)
-        print('test')
-        return { "equipements" : liste}
 
     run(host='localhost', port=2056)
 
