@@ -17,7 +17,8 @@ $(window).on('load', function () {
     minLength: 3
   });
 
-  $("#recherche").on("click", function() {
+  $("#recherche").on("click", function(event) {
+    event.preventDefault()
     console.log($("#type").val())
       console.log($("#inputNomDeVille").val())
     if ($("#type").val() != "" && $("#inputNomDeVille").val() != "") {
