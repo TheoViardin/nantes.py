@@ -27,6 +27,7 @@ $(window).on('load', function () {
         //http://localhost:2056/api/activites/Vertou
         $('#resultat').empty()
         if (response.reussite == "true") {
+          if (response[$("#type").val()].length > 0) {
           $('#resultat').append(`
             <thead>
               <tr>
@@ -53,6 +54,9 @@ $(window).on('load', function () {
         } else {
           $("#resultat").append("<p>Pas de donnée sur cette ville</p>")
         }
+      } else {
+        alert("Erreur lors de traitement de la requete:\n" + response.message)
+      }
       })
       .fail(function(response) {
   console.log( response );

@@ -12,26 +12,35 @@ class Equipements_activites(object):
 
 
     def getActiviteByVille(self, ville):
-        conn = sqlite3.connect('labase.db')
-        c = conn.cursor()
-        conn.text_factory = str
-        activites = c.execute("SELECT ActLib FROM 'activites' WHERE ComLib='"+ville+"'")
-        return activites.fetchall()
-        conn.commit()
-        conn.close()
-
+        try:
+            conn = sqlite3.connect('labase.db')
+            c = conn.cursor()
+            conn.text_factory = str
+            activites = c.execute("SELECT ActLib FROM 'activites' WHERE ComLib='"+ville+"'")
+            retour =  activites.fetchall()
+            conn.commit()
+            conn.close()
+            return retour
+        except sqlite3.OperationalError as e:
+            print('[-] Sqlite operational error: {}, ville: {}, Abandon'.format(e, ville))
+            return('[-] Sqlite operational error: {}, ville: {}, Abandon'.format(e, ville))
 
 class Equipements(object):
 
 
     def getEquipementsByVille(self, ville):
-        conn = sqlite3.connect('labase.db')
-        c = conn.cursor()
-        conn.text_factory = str
-        activites = c.execute("SELECT EquNom FROM 'equipements' WHERE ComLib='"+ville+"'")
-        return activites.fetchall()
-        conn.commit()
-        conn.close()
+        try:
+            conn = sqlite3.connect('labase.db')
+            c = conn.cursor()
+            conn.text_factory = str
+            activites = c.execute("SELECT EquNom FROM 'equipements' WHERE ComLib='"+ville+"'")
+            conn.commit()
+            retour = activites.fetchall()
+            conn.close()
+            return retour
+        except sqlite3.OperationalError as e:
+            print('[-] Sqlite operational error: {}, ville: {}, Abandon'.format(e, ville))
+            return('[-] Sqlite operational error: {}, ville: {}, Abandon'.format(e, ville))
 
 _allow_origin = '*'
 _allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
@@ -51,19 +60,20 @@ def index(ville):
     liste = activites.getActiviteByVille(ville)
     response.headers['Content-Type'] = 'application/json'
     reussite = "true"
-    if (len(liste) == 0):
+    if (type(liste) is str):
         reussite = "false"
+        return { "reussite" : reussite, "message" : liste}
     return { "reussite" : reussite, "activites" : liste}
 
 @get('/api/equipements/<ville>')
 def index(ville):
     equipements = Equipements()
     liste = equipements.getEquipementsByVille(ville)
-    print('test')
     response.headers['Content-Type'] = 'application/json'
     reussite = "true"
-    if (len(liste) == 0):
+    if (type(liste) is str):
         reussite = "false"
+        return { "reussite" : reussite, "message" : liste}
     return { "reussite" : reussite, "equipements" : liste}
 
 
