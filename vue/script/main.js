@@ -25,26 +25,33 @@ $(window).on('load', function () {
       console.log("localhost:2056/api/"+$("#type").val()+"/"+$("#inputNomDeVille").val())
       $.get("http://localhost:2056/api/"+$("#type").val()+"/"+$("#inputNomDeVille").val(), function(response) {
         //http://localhost:2056/api/activites/Vertou
-        console.log("test")
-        $("#resultat").append(
-          `
-          <tr>
-            <th></th>
-            <th>${$("#type").val()}</th>
-          </tr>
-          `
-        )
-        let i = 0
-        for (element of response[$("#type").val()]) {
-          $("#resultat").append(
-            `
-            <tr>
-              <td>${i}</td>
-              <td>${element[0]}</td>
-            </tr>
-            `
-          )
-          i++
+        $('#resultat').empty()
+        if (response.reussite == "true") {
+          $('#resultat').append(`
+            <thead>
+              <tr>
+                <th></th>
+                <th>${$("#type").val()}</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>`)
+          let i = 0
+          for (element of response[$("#type").val()]) {
+            console.log(element)
+            $("#resultat tbody").append(
+              `
+              <tr>
+                <td>${i}</td>
+                <td>${element[0]}</td>
+              </tr>
+              `
+            )
+            i++
+          }
+          $('#resultat').DataTable();
+        } else {
+          $("#resultat").append("<p>Pas de donnée sur cette ville</p>")
         }
       })
       .fail(function(response) {

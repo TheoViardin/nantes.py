@@ -50,7 +50,10 @@ def index(ville):
     activites = Equipements_activites()
     liste = activites.getActiviteByVille(ville)
     response.headers['Content-Type'] = 'application/json'
-    return { "activites" : liste}
+    reussite = "true"
+    if (len(liste) == 0):
+        reussite = "false"
+    return { "reussite" : reussite, "activites" : liste}
 
 @get('/api/equipements/<ville>')
 def index(ville):
@@ -58,23 +61,13 @@ def index(ville):
     liste = equipements.getEquipementsByVille(ville)
     print('test')
     response.headers['Content-Type'] = 'application/json'
-    return { "equipements" : liste}
+    reussite = "true"
+    if (len(liste) == 0):
+        reussite = "false"
+    return { "reussite" : reussite, "equipements" : liste}
 
 
 
 if __name__ == '__main__':
 
     run(host='localhost', port=2056)
-
-    '''print('Que voulez-vous savoir ?')
-    choix = input('1 - Activites d\'une ville\n2 - Equipements d\'une ville\n')
-    if (choix == 1):
-        equipement = Equipements_activites()
-        choix = raw_input('Entrer le nom d\'une ville\n')
-        print(equipement.getActiviteByVille(choix))
-    elif (choix == 2):
-        equipement = Equipements()
-        choix = raw_input('Entrer le nom d\'une ville\n')
-        print(equipement.getEquipementsByVille(choix))
-    else:
-        print('Choix invalide')'''
