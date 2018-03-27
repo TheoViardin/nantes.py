@@ -12,10 +12,10 @@ class Equipements_activites(object):
 
 
     def getActiviteByVille(self, ville):
-        conn = sqlite3.connect('db.db')
+        conn = sqlite3.connect('labase.db')
         c = conn.cursor()
         conn.text_factory = str
-        activites = c.execute("SELECT ActLib FROM 'equipements_activites' WHERE ComLib='"+ville+"'")
+        activites = c.execute("SELECT ActLib FROM 'activites' WHERE ComLib='"+ville+"'")
         return activites.fetchall()
         conn.commit()
         conn.close()
@@ -25,7 +25,7 @@ class Equipements(object):
 
 
     def getEquipementsByVille(self, ville):
-        conn = sqlite3.connect('db.db')
+        conn = sqlite3.connect('labase.db')
         c = conn.cursor()
         conn.text_factory = str
         activites = c.execute("SELECT EquNom FROM 'equipements' WHERE ComLib='"+ville+"'")
