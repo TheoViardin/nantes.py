@@ -6,6 +6,7 @@ from bottle import response
 from json import dumps
 import sqlite3
 import sys
+import unittest
 
 
 class Equipements_activites(object):
@@ -36,11 +37,19 @@ class Equipements(object):
             activites = c.execute("SELECT EquNom FROM 'equipements' WHERE ComLib='"+ville+"'") # On demande toutes les activités dans la ville demandée
             conn.commit()
             retour = activites.fetchall() # On réorganise les valeurs retournées dans un tableau
-            conn.close() # On termine la connexion avec la base de donnée
+            conn.close() # On termine la connexion avec la base de données
             return retour # On retourne le tableau
         except sqlite3.OperationalError as e:
             print('[-] Sqlite operational error: {}, ville: {}, Abandon'.format(e, ville)) # On affiche l'erreur dans la console du serveur
             return('[-] Sqlite operational error: {}, ville: {}, Abandon'.format(e, ville)) # On retourne la meme erreur pour ensuite l'afficher au client
+
+class Test(unittest.TestCase):
+    def equipementBasseGou(self):
+        equipements = Equipements() # Nouvel obet equipement
+        liste = equipements.getEquipementsByVille(ville) # On execute la requete sur la base de donnée
+        self.assertEqual(len(liste), 36)
+
+
 
 _allow_origin = '*'
 _allow_methods = 'PUT, GET, POST, DELETE, OPTIONS'
@@ -84,5 +93,6 @@ def index(ville):
 
 
 if __name__ == '__main__':
+    #unittest.main()
 
     run(host='localhost', port=2056) # Le serveur écoute sur localhost:2056
